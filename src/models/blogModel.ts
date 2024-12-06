@@ -2,16 +2,16 @@ import mongoose, { Schema, Document } from "mongoose";
 
 // Define the Blog interface for type reference
 export interface Blog extends Document {
-    file?: File;
+    file?: string;
     title: string;
     content: string;
     author: mongoose.Schema.Types.ObjectId; // This references the User model
 };
 
 
-const BlogSchema: Schema<Blog> = new Schema({
+const BlogSchema = new mongoose.Schema<Blog>({
     file: {
-        type: File
+        type: String
     },
     title: {
         type: String,
@@ -25,7 +25,7 @@ const BlogSchema: Schema<Blog> = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User", // Reference to the User model
         required: true,
-    }
+    },
 }, 
 {
     timestamps: true

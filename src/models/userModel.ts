@@ -8,7 +8,12 @@ export interface User extends Document {
     blogs: Blog[];
 };
 
-const UserSchema: Schema<User> = new Schema({
+export interface IUserDocument extends User, Document {
+    createdAt: Date,
+    updatedAt: Date,
+}
+
+const UserSchema: Schema<IUserDocument> = new Schema({
     username: {
         type: String,
         required: [true, "Username is required"],
