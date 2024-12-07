@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from 'react'
 import { Loader2, LockKeyhole, Mail, User } from "lucide-react";
@@ -43,7 +42,7 @@ const Signup: React.FC = () => {
         <div className='flex items-center justify-center min-h-screen'>
             <form onSubmit={loginSubmitHandler} className='p-8 w-full max-w-md border mx-4 border-gray rounded-lg'>
                 <div className='mb-4'>
-                    <h1 className='font-bold text-2xl text-center'>Builders Academy</h1>
+                    <h1 className='font-bold text-2xl text-center text-white'>Builders Academy</h1>
                 </div>
                 <div className='mb-4'>
                 <div className='relative'>
@@ -102,7 +101,7 @@ const Signup: React.FC = () => {
                     }
                 </div>
                 <Separator />
-                <p className='mt-2 text-center'>
+                <p className='mt-2 text-center text-gray-300'>
                     Already have an account?{" "}
                     <Link href={"/login"} className='text-white font-semibold'>Login</Link>
                 </p>
