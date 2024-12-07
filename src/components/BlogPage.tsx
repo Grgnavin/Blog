@@ -109,7 +109,7 @@ const BlogPage: React.FC = () => {
             <DialogContent className="p-6 rounded-lg bg-black">
                 <DialogHeader>
                 <DialogTitle className=" text-center text-2xl text-white">
-                    Update Blog
+                    Add Blog
                 </DialogTitle>
                     <DialogDescription className="text-sm text-gray-300 text-center">
                         Update the fields below to modify your blog details.
