@@ -5,16 +5,28 @@ import { persist } from "zustand/middleware";
 
 axios.defaults.withCredentials = true;
 
-interface Blog {
+export interface Author {
+    _id: string;
+    username: string;
+    email: string;
+    password: string;  
+    blogs: string[];   
+    createdAt: string; 
+    updatedAt: string;
+}
+
+export interface Blog {
+    _id: string;
     title: string;
-    description: string;
-    author: string;
-    date: string;
-    image: string;
+    content: string;
+    author: Author;
+    file: string;
+    createdAt: string; 
+    updatedAt: string; 
 }
 
 interface BlogStore {
-    blog: Blog | null;
+    blog: null;
     singleBlog: Blog | null;
     allBlogs: Blog[] | [],
     loading: boolean;
@@ -47,11 +59,17 @@ export const useBlogStore = create<BlogStore>()(
                         })
                     } else {
                         set({ loading: false });
-                        console.error(res.data.message || "Failed to create blog");
+                        toast({
+                            description: res.data.message || "Failed to create blog"
+                        });
                     }
-                } catch (error) {
-                    console.error(error);
-                    set({ loading: false });
+                } catch (error: any) {
+                    console.log(error);
+                set({ loading: false });
+                toast({
+                    variant: "destructive",
+                    description: error.response?.data.message ||"Error while creating resturant" 
+                });
                 }
             },
             updateBlog: async (id: string, formData: FormData) => {

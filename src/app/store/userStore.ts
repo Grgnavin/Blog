@@ -17,6 +17,7 @@ interface UserStore {
     loading: boolean;
     signup: (input: SignupInput) => Promise<void>;
     login: (input: LoginInput) => Promise<void>;
+    logout: () => Promise<void>;
 }
 
 export const useUserStore = create<UserStore>()(
@@ -43,7 +44,24 @@ export const useUserStore = create<UserStore>()(
         login: async(input: LoginInput) => {
             try {
                 set({ loading: true });
-                const res = await axios.post('/api/auth/signin', input);
+                const res = await axios.post('/api/auth/user/signin', input);
+                if (res.data.success) {
+                    set({ loading: false, user: res.data.user });
+                    toast({
+                        description: res.data.message
+                    })
+                }else{
+                    set({ loading: false });
+                }
+            } catch (error: any) {
+                console.log(error);
+                set({ loading: false });
+            }
+        },
+        logout: async() => {
+            try {
+                set({ loading: true });
+                const res = await axios.post('/api/auth/user/logout');
                 if (res.data.success) {
                     set({ loading: false, user: res.data.user });
                     toast({
