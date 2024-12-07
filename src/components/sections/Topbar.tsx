@@ -19,13 +19,13 @@ const Topbar = () => {
 
             {/* Navigation */}
             <nav className="flex items-center space-x-8">
-                <Link href="#programs" className="hidden md:block text-white hover:text-green-400">
+                <Link href="/programs" className="hidden md:block text-white hover:text-green-400">
                     Programs
                 </Link>
                 <Link href="/blogs" className="hidden md:block text-white hover:text-green-400">
                     Blogs
                 </Link>
-                <Link href="#careers" className="hidden md:block text-white hover:text-green-400">
+                <Link href="careers" className="hidden md:block text-white hover:text-green-400">
                     Careers
                 </Link>
                 <button
