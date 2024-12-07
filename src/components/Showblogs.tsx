@@ -1,19 +1,27 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from './ui/dialog'; // Import DialogDescription
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Separator } from './ui/separator';
-import { BlogPost } from '@/app/(FE)/blogs/[id]/page';
+import { Blog } from '@/app/store/blogstore';
+import { useRouter } from 'next/navigation';
 
-const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: number) => void }) => {
+const ShowBlogs = ({ blog, updateblog, deleteblog }: { 
+    blog: Blog | null, 
+    updateblog: (id: string, formdata: FormData) => Promise<void>, 
+    deleteblog: (id: string) => Promise<void>
+}) => {
+    if (!blog) {
+        return <div>Blog not found.</div>;
+    }
     const [updateData, setUpdateData] = useState({
-        title: blog.title,
-        author: blog.author,
-        description: blog.description,
-        image: blog.image,
+        title: blog?.title,
+        author: blog?.author.username,
+        description: blog?.content,
+        image: blog?.file,
     });
-
+    const[file, setfile] = useState<File | undefined>();
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setUpdateData((prev) => ({
@@ -21,24 +29,41 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
             [name]: value,
         }));
     };
-
-    const handleUpdate = () => {
+    const router = useRouter();
+    const handleUpdate = async(e: React.FormEvent) => {
+        e.preventDefault();
         console.log('Updated Blog Data:', updateData);
-        // Handle the update logic here (e.g., API call)
+        const formdata = new FormData();
+            formdata.append("title", updateData.title);
+            formdata.append("description", updateData.description);
+            formdata.append("author", updateData.author);
+            if (file) {
+                formdata.append("image", file);
+            }
+        await updateblog( blog._id ,formdata);
+        router.push('/blogs');
     };
+
+    const HandleDelete = async() => {
+        await deleteblog(blog._id);
+        router.push('/blogs');
+    }
+
+    const date = new Date(blog!.createdAt); 
 
     return (
         <div className="pr-8 pl-8 pt-8 overflow-hidden rounded-lg border border-purple-500 border-none min-h-screen">
             <img
-                src={blog.image}
-                alt={blog.title}
+                src={blog?.file}
+                alt={blog?.title}
                 className="w-full h-75 object-cover rounded-t-lg"
             />  
-            <h1 className="text-3xl font-bold text-purple-400 mb-4 text-center p-2">{blog.title}</h1>
-            <p className="text-gray-400 mb-6 px-2">{blog.description}</p>
+            <h1 className="text-3xl font-bold text-gray-300 mb-4 text-center p-2">{blog?.title.toLocaleUpperCase()}</h1>
+            <Separator className='mb-5'/>
+            <p className="text-gray-400 mb-6 px-2">{blog?.content}</p>
             <div className="text-sm text-gray-500 flex justify-between">
-                <span>By {blog.author}</span>
-                <span>{blog.date}</span>
+                <span>By {blog?.author.username}</span>
+                <span>{date.toLocaleDateString()}</span>
             </div>
         <div className="p-4 flex justify-end gap-4">
             <Dialog>
@@ -78,7 +103,7 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
                     <Input
                         id="author"
                         name="author"
-                        value={updateData.author}
+                        value={blog?.author.username}
                         onChange={handleInputChange}
                         className="mt-1 block w-full text-gray-300"
                     />
@@ -101,10 +126,9 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
                         Image URL
                     </label>
                 <Input
-                    id="image"
                     name="image"
                     type="file"
-                    onChange={handleInputChange}
+                    onChange={(e) => setfile(e.target.files?.[0])}
                     className="mt-1 block w-full text-gray-300"
                 />
                 </div>
@@ -119,7 +143,7 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
         </Dialog>
             <Button 
                 className="border border-gray-300 px-6 py-2 text-white rounded-lg hover:scale-105"
-                onClick={() => deleteBlog(blog.id)}
+                onClick={HandleDelete}
                 >
                 Delete Blog
             </Button>

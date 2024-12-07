@@ -9,50 +9,6 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Loader2 } from 'lucide-react';
 import { useBlogStore } from '@/app/store/blogstore';
-import { BlogSchema } from '@/app/schema/BlogSchema';
-
-const blogPosts = [
-    {
-        id: 1,
-        title: 'AI in Cybersecurity',
-        description: 'An overview of blockchain and its transformative potential. An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.',
-        author: 'Jane Smith',
-        date: 'November 20, 2024',
-        image: 'https://securityintelligence.com/wp-content/uploads/2024/10/AI-robot-using-cyber-security-to-protect-information-privacy.jpeg', // Dummy Image
-    },
-    {
-        id: 2,
-        title: 'AI in Cybersecurity',
-        description: 'An overview of blockchain and its transformative potential. An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.',
-        author: 'Jane Smith',
-        date: 'November 20, 2024',
-        image: 'https://www.cyberdb.co/wp-content/uploads/2020/08/ai1.png', // Dummy Image
-    },
-    {
-        id: 3,
-        title: 'AI in Cybersecurity',
-        description: 'An overview of blockchain and its transformative potential. An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.',
-        author: 'Jane Smith',
-        date: 'November 20, 2024',
-        image: 'https://www.cyberdb.co/wp-content/uploads/2020/08/ai1.png', // Dummy Image
-    },
-    {
-        id: 4,
-        title: 'AI in Cybersecurity',
-        description: 'An overview of blockchain and its transformative potential. An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.',
-        author: 'Jane Smith',
-        date: 'November 20, 2024',
-        image: 'https://www.cyberdb.co/wp-content/uploads/2020/08/ai1.png', // Dummy Image
-    },
-    {
-        id: 5,
-        title: 'AI in Cybersecurity',
-        description: 'An overview of blockchain and its transformative potential. An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.An overview of blockchain and its transformative potential.',
-        author: 'Jane Smith',
-        date: 'November 20, 2024',
-        image: 'https://www.cyberdb.co/wp-content/uploads/2020/08/ai1.png', // Dummy Image
-    },
-];
 
 export type BlogFormSchema = {
     title: string;
@@ -111,9 +67,7 @@ const BlogPage: React.FC = () => {
 
     return (
         <div className="bg-black text-white min-h-screen p-8">
-        {/* Title Section */}
         <h1 className="text-4xl font-bold text-center text-gray-300 mb-8 p-4">Latest Blogs</h1>
-        {/* Blog Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {allBlogs.length > 0 &&
                     allBlogs.map((post) => {
