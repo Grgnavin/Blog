@@ -1,6 +1,12 @@
 'use client';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
+import { Button } from './ui/button';
+import { DialogTrigger } from '@radix-ui/react-dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
+import { Separator } from './ui/separator';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
 
 const blogPosts = [
     {
@@ -46,6 +52,25 @@ const blogPosts = [
 ];
 
 const BlogPage: React.FC = () => {
+    const [updateData, setUpdateData] = useState({
+        title: "",
+        author: "",
+        description: "",
+        image: "",
+    });
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setUpdateData((prev: any) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleUpdate = () => {
+        console.log('Updated Blog Data:', updateData);
+        // Handle the update logic here (e.g., API call)
+    };
     const router = useRouter();
     return (
         <div className="bg-black text-white min-h-screen p-8">
@@ -73,12 +98,85 @@ const BlogPage: React.FC = () => {
 
         {/* Floating Add Blog Button */}
         <div className="fixed bottom-10 right-9">
-            <button
-                className="bg-purple-500 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 transition transform hover:scale-110"
-                onClick={() => alert('Add Blog Clicked!')}
-            >
-                + Add Blog
-            </button>
+            <Dialog>
+                <DialogTrigger asChild>
+                <Button
+                    className="bg-black text-white p-6 text-semibold rounded-full border border-gray-300 transition transform hover:scale-110"
+                >
+                    + Add Blog
+            </Button>
+            </DialogTrigger>
+            <DialogContent className="p-6 rounded-lg bg-black">
+                <DialogHeader>
+                <DialogTitle className=" text-center text-2xl text-white">
+                    Update Blog
+                </DialogTitle>
+                    <DialogDescription className="text-sm text-gray-300 text-center">
+                        Update the fields below to modify your blog details.
+                    </DialogDescription>
+              {/* Separator added below the dialog title */}
+                <Separator className="my-4 border-purple-300" />
+                </DialogHeader>
+                    <form className="space-y-4">
+                    <div>
+                            <label htmlFor="title" className="block text-sm font-medium text-gray-300">
+                                Title
+                            </label>
+                    <Input
+                        id="title"
+                        name="title"
+                        value={updateData.title}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full text-gray-300"
+                    />
+                    </div>
+                    <div>
+                <label htmlFor="author" className="block text-sm font-medium text-gray-300">
+                    Author
+                </label>
+                    <Input
+                        id="author"
+                        name="author"
+                        value={updateData.author}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full text-gray-300"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-300">
+                        Description
+                    </label>
+                    <Textarea
+                        id="description"
+                        name="description"
+                        value={updateData.description}
+                        onChange={handleInputChange}
+                        className="mt-1 block w-full text-gray-300"
+                        rows={8}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="image" className="block text-sm font-medium text-gray-300">
+                        Image URL
+                    </label>
+                <Input
+                    id="image"
+                    name="image"
+                    type="file"
+                    onChange={handleInputChange}
+                    className="mt-1 block w-full text-gray-300"
+                />
+                </div>
+                <Button
+                    onClick={handleUpdate}
+                    className="mt-4 px-6 py-2 text-white border border-gray-300 rounded-lg shadow w-full"
+                >
+                    Save Changes
+                </Button>
+            </form>
+            </DialogContent>
+        </Dialog>
+            
         </div>
         </div>
     );

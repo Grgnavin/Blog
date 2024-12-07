@@ -43,16 +43,16 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
         <div className="p-4 flex justify-end gap-4">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button className="bg-purple-500 px-6 py-2 text-white hover:bg-purple-600 rounded-lg shadow">
-                        Update Blog
+                    <Button className="px-6 py-2 text-white border border-gray-300 rounded-lg shadow hover:scale-105">
+                        Update Blog 
                     </Button>
             </DialogTrigger>
-            <DialogContent className="p-6 rounded-lg bg-purple-100">
+            <DialogContent className="p-6 rounded-lg bg-black">
                 <DialogHeader>
-                <DialogTitle className="text-purple-600 text-center text-2xl">
+                <DialogTitle className="text-white text-center text-2xl">
                     Update Blog
                 </DialogTitle>
-                    <DialogDescription className="text-sm text-gray-500 text-center">
+                    <DialogDescription className="text-sm text-gray-300 text-center">
                         Update the fields below to modify your blog details.
                     </DialogDescription>
               {/* Separator added below the dialog title */}
@@ -60,7 +60,7 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
                 </DialogHeader>
                     <form className="space-y-4">
                     <div>
-                            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
+                            <label htmlFor="title" className="block text-sm font-medium text-gray-300">
                                 Title
                             </label>
                     <Input
@@ -68,11 +68,11 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
                         name="title"
                         value={updateData.title}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full text-gray-600"
+                        className="mt-1 block w-full text-gray-300"
                     />
                     </div>
                     <div>
-                <label htmlFor="author" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="author" className="block text-sm font-medium text-gray-300">
                     Author
                 </label>
                     <Input
@@ -80,11 +80,11 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
                         name="author"
                         value={updateData.author}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full text-gray-600"
+                        className="mt-1 block w-full text-gray-300"
                     />
                 </div>
                 <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-300">
                         Description
                     </label>
                     <Textarea
@@ -92,12 +92,12 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
                         name="description"
                         value={updateData.description}
                         onChange={handleInputChange}
-                        className="mt-1 block w-full text-gray-600"
+                        className="mt-1 block w-full text-gray-300"
                         rows={8}
                     />
                 </div>
                 <div>
-                    <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+                    <label htmlFor="image" className="block text-sm font-medium text-gray-300">
                         Image URL
                     </label>
                 <Input
@@ -105,12 +105,12 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
                     name="image"
                     type="file"
                     onChange={handleInputChange}
-                    className="mt-1 block w-full text-gray-500"
+                    className="mt-1 block w-full text-gray-300"
                 />
                 </div>
                 <Button
                     onClick={handleUpdate}
-                    className="mt-4 bg-purple-500 px-6 py-2 text-white hover:bg-purple-600 rounded-lg shadow w-full"
+                    className="mt-4 px-6 py-2 text-white hover:scale-105 border border-gray-300 rounded-lg shadow w-full"
                 >
                     Save Changes
                 </Button>
@@ -118,7 +118,7 @@ const ShowBlogs = ({ blog, deleteBlog }: { blog: BlogPost, deleteBlog: (id: numb
             </DialogContent>
         </Dialog>
             <Button 
-                className="bg-purple-500 px-6 py-2 text-white hover:bg-purple-600 rounded-lg shadow"
+                className="border border-gray-300 px-6 py-2 text-white rounded-lg hover:scale-105"
                 onClick={() => deleteBlog(blog.id)}
                 >
                 Delete Blog
