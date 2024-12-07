@@ -1,4 +1,4 @@
-import CredentialsProvider  from 'next-auth/providers/credentials';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from "@/lib/connectDb";
 import UserModel from '@/models/userModel';
 import bcrypt from "bcryptjs";
@@ -8,9 +8,8 @@ export const authOptions = {
         CredentialsProvider({
             name: "Credentials",
             credentials: {
-                username: { label: "username", type: "text", placeholder: "Enter your username", required: true },
-                phone: { label: "email", type: "text", placeholder: "Enter your email", required: true },
-                password: { label: "Password", type: "password", required: true }
+                email: { label: "Email", type: "text", placeholder: "Enter your email", required: true },
+                password: { label: "Password", type: "password", required: true, placeholder: "Enter your password" }
             },
             async authorize(credentials: any): Promise<any> {
                 if (!credentials) {
@@ -21,13 +20,11 @@ export const authOptions = {
                     email: credentials.email
                 }).select("-password");
                 if (user) {
-                    const passwordValidation = await bcrypt.compare(credentials.password, user.password) 
+                    const passwordValidation = await bcrypt.compare(credentials.password, user.password);
                     if (passwordValidation) {
-                        return {
-                            user
-                        };
+                        return user; // Valid user
                     }
-                    return null;
+                    return null; // Invalid password
                 }
                 try {
                     const hashedPass = await bcrypt.hash(credentials.password, 10);
@@ -36,20 +33,21 @@ export const authOptions = {
                         username: credentials.username,
                         password: hashedPass,
                     });
-                    
-                    const user = await UserModel.findById(newUser._id).select("-password");
-                    return user;
+                    const createdUser = await UserModel.findById(newUser._id).select("-password -image");
+                    return createdUser;
                 } catch (error) {
-                    console.log(error);
+                    console.log("Error creating user:", error);
+                    return null;
                 }
-                return null;
             }
         })
-    ], 
+    ],
     secret: process.env.JWT_SECRET || "secret",
     callbacks: {
         async session({ token, session }: any) {
-            session.user.id = token.sub
+            if (token?.sub) {
+                session.user.id = token.sub;
+            }
             return session;
         }
     }

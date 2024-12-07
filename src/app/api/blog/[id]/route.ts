@@ -1,10 +1,10 @@
-import uploadImageOnCloudinary from "@/app/lib/imageUpload";
 import dbConnect from "@/lib/connectDb";
 import BlogModel from "@/models/blogModel";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import UserModel from "@/models/userModel";
+import uploadImageOnCloudinary from "@/lib/imageUpload";
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
     const id = req.nextUrl.pathname.split('/').pop();
@@ -47,12 +47,13 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
 };
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
-    const id = req.nextUrl.pathname.split('/').pop();
+        const id = req.nextUrl.pathname.split('/').pop();
 
-    const formData = await req.formData();
-    const title = formData.get("title")?.toString();
-    const content = formData.get("content")?.toString();
-    const file = formData.get("file");
+        const formData = await req.formData();
+        const title = formData.get("title")?.toString();
+        const description = formData.get("description")?.toString();
+        const author = formData.get("author")?.toString();
+        const image = formData.get("image"); 
 
     try {
         const post = await BlogModel.findById(id);
@@ -64,16 +65,29 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
             }, { status: 400 });
         }
 
-        if (!(file instanceof File)) {
-            return NextResponse.json({ message: "File is required" }, { status: 400 });
+        const cookieStore = await cookies();
+        const token = cookieStore.get("token")?.value;
+
+        if (!token) {
+            return NextResponse.json({ message: "No token found, please login" }, { status: 401 });
+        }
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { userId: string };
+
+        if (!(post.author.toString() === decoded.userId.toString())) {
+            return NextResponse.json({ message: "User not authenticated" }, { status: 400 });
+        }
+
+        if (!(image instanceof File)) {
+            return NextResponse.json({ message: "Image must be a valid file" }, { status: 400 });
         }
 
         // Upload the file to Cloudinary
-        const multerFile = file as unknown as Express.Multer.File;
-        const imageUrl = await uploadImageOnCloudinary(multerFile);
+        const imageBuffer = Buffer.from(await image.arrayBuffer());
+        const imageUrl = await uploadImageOnCloudinary(image);
 
         post.title = title || post.title;
-        post.content = content || post.content;
+        post.content = description || post.content;
         post.file = imageUrl.toString();
         await post.save();
 
@@ -98,7 +112,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const id = req.nextUrl.pathname.split('/').pop();
 
     try {
-        const blog = await BlogModel.findById(id);
+        const blog = await BlogModel.findById(id).populate('author');
         if (!blog) {
             return NextResponse.json({
                 message: "Blog not found",
