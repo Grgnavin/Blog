@@ -32,7 +32,6 @@ const ShowBlogs = ({ blog, updateblog, deleteblog }: {
     const router = useRouter();
     const handleUpdate = async(e: React.FormEvent) => {
         e.preventDefault();
-        console.log('Updated Blog Data:', updateData);
         const formdata = new FormData();
             formdata.append("title", updateData.title);
             formdata.append("description", updateData.description);

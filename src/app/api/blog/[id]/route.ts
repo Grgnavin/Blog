@@ -8,7 +8,6 @@ import uploadImageOnCloudinary from "@/lib/imageUpload";
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
     const id = req.nextUrl.pathname.split('/').pop();
-    console.log(req.nextUrl.pathname);
     await dbConnect();
     try {
         const cookieStore = await cookies();
@@ -108,7 +107,6 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
     await dbConnect();
-    console.log(req.nextUrl.pathname);
     const id = req.nextUrl.pathname.split('/').pop();
 
     try {

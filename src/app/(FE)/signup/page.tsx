@@ -26,11 +26,7 @@ const Signup: React.FC = () => {
             setErrors(fieldError as Partial<SignupInput>);
             return;
         }
-        console.log(input);
-        
         //api implement
-
-
         setInput({
             email: "",
             fullname: "",

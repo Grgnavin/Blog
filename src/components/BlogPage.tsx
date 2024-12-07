@@ -38,7 +38,6 @@ const BlogPage: React.FC = () => {
     const { allBlogs ,getAllBlogs } = useBlogStore();
     const SubmitHandler = async(e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log('Updated Blog Data:', updateData, file);
         // Handle the update logic here (e.g., API call
         try {
             const formdata = new FormData();

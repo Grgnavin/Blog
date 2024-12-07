@@ -38,9 +38,6 @@ export async function POST(req: NextRequest, res: NextResponse): Promise<NextRes
         const description = formData.get("description")?.toString();
         const author = formData.get("author")?.toString();
         const image = formData.get("image"); 
-
-        console.log(formData);
-
         if (!title || !description || !author || !image) {
             return NextResponse.json({ message: "All fields are required" }, { status: 400 });
         }

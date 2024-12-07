@@ -32,7 +32,6 @@ const Login: React.FC = () => {
             return;
         }
         //api implement
-        console.log(input);
         await login(input);
         route.push('/blogs');
         
