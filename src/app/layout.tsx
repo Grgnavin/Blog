@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google"; // Import DM Sans from next/font/google
 import localFont from "next/font/local";
 import "./globals.css";
-import Topbar from "@/components/sections/Topbar";
-import { SessionProvider } from "next-auth/react";
 import ClientSessionProvider from "./ClientSideProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 // Import DM Sans
 const dmSans = DM_Sans({
@@ -41,9 +40,11 @@ export default function RootLayout({
       <body
         className={`${dmSans.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-black`}
       >
+        
         <ClientSessionProvider>
           {children}
         </ClientSessionProvider>
+        <Toaster />
       </body>
     </html>
   );
