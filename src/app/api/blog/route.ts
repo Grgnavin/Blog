@@ -61,8 +61,8 @@ export async function POST(req: NextRequest, res: NextResponse): Promise<NextRes
         const newPost = await BlogModel.create({
             title,
             description,
-            author: decoded.userId, // Use the userId from the token as the author
-            file: imageUrl, // Save the Cloudinary image URL in your database
+            author: decoded.userId, 
+            file: imageUrl,
         });
 
         return NextResponse.json({

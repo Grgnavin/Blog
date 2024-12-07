@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateToken } from '@/app/lib/generateToken';
 
 export async function POST(req: NextRequest): Promise<void> {
-        //Login route
+    //Login route
     try {
         const { email, password } = await req.json();
 
