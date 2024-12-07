@@ -6,6 +6,8 @@ import { SignupInput, userSignupSchema } from '@/app/schema/userSchema';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useUserStore } from '@/app/store/userStore';
+import { useRouter } from 'next/navigation';
 
 
 const Login: React.FC = () => {
@@ -15,6 +17,8 @@ const Login: React.FC = () => {
         fullname: "",
     });
     const[errors, setErrors] = useState<Partial<SignupInput>>({});
+    const { loading, login } = useUserStore();
+    const route = useRouter();
     const changeEventHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setInput({...input, [name]: value});
@@ -29,8 +33,9 @@ const Login: React.FC = () => {
         }
         //api implement
         console.log(input);
+        await login(input);
+        route.push('/blogs');
         
-
         setInput({
             email: "",
             fullname: "",
@@ -38,7 +43,6 @@ const Login: React.FC = () => {
         })
     }
 
-    const loading = false;
 
     return (
         <div className='flex items-center justify-center min-h-screen'>
@@ -52,7 +56,7 @@ const Login: React.FC = () => {
                     type='text'
                     name='fullname'
                     placeholder='Full Name'
-                    className='pl-10'
+                    className='pl-10 text-gray-200'
                     value={input.fullname}
                     onChange={changeEventHandler}
                 />
@@ -68,7 +72,7 @@ const Login: React.FC = () => {
                         type='email'
                         name='email'
                         placeholder='Email'
-                        className='pl-10 focus-visible:ring-1'
+                        className='pl-10 focus-visible:ring-1 text-gray-200'
                         value={input.email}
                         onChange={changeEventHandler}
                     />
@@ -84,7 +88,7 @@ const Login: React.FC = () => {
                         type='password'
                         name='password'
                         placeholder=' Password'
-                        className='pl-10 focus-visible:ring-1'
+                        className='pl-10 focus-visible:ring-1 text-gray-200'
                         value={input.password}
                         onChange={changeEventHandler}
                     />

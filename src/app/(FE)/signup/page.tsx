@@ -67,7 +67,7 @@ const Signup: React.FC = () => {
                         type='email'
                         name='email'
                         placeholder='Email'
-                        className='pl-10 focus-visible:ring-1'
+                        className='pl-10 focus-visible:ring-1 text-gray-200'
                         value={input.email}
                         onChange={changeEventHandler}
                     />
@@ -83,7 +83,7 @@ const Signup: React.FC = () => {
                         type='password'
                         name='password'
                         placeholder=' Password'
-                        className='pl-10 focus-visible:ring-1'
+                        className='pl-10 focus-visible:ring-1 text-gray-200'
                         value={input.password}
                         onChange={changeEventHandler}
                     />
