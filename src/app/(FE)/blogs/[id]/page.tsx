@@ -23,7 +23,6 @@ const Page: React.FC = () => {
         return <div className='text-center text-white'>No blogs found for this id...</div>;
     }
 
-    // Pass both `findBlog` and the `updateBlog` function to ShowBlogs
     return (
         <div className='flex flex-col items-center justify-center max-w-3xl mx-auto p-8 rounded-lg shadow-lg'>
             <ShowBlogs blog={findBlog} updateblog={updateBlog} deleteblog={deleteBlog}/>

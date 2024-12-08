@@ -1,10 +1,31 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { checkToken } from '@/lib/checkToken';
+import { useUserStore } from '@/app/store/userStore';
 
 const Topbar = () => {
     const route = useRouter();
+    const { logout } = useUserStore();
+    const [token, setToken] = useState<string | null>(null);
+
+    useEffect(() => {
+        const tokenValue = checkToken();
+        setToken(tokenValue);
+    }, []); 
+
+
+    const ClickHandler = async() => {
+        if (!token) {
+            route.push('/login');
+        } else {
+            logout();
+            localStorage.removeItem('token'); // Remove token on logout
+            setToken(null); // Update state
+        }
+    }
+
     return (
         <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <header className="fixed top-0 left-0 w-full bg-white/10 backdrop-blur-md shadow-md">
@@ -29,10 +50,12 @@ const Topbar = () => {
                     Careers
                 </Link>
                 <button
-                onClick={() => route.push('/login')}
+                onClick={ClickHandler}
                 className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-full"
                 >
-                    Login
+                    {
+                        token ? "Logout" : "Login"
+                    }
                 </button>
             </nav>
             </div>

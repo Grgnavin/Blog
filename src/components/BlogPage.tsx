@@ -70,13 +70,12 @@ const BlogPage: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         {allBlogs.length > 0 &&
                     allBlogs.map((post) => {
-                        // Convert the createdAt string to a Date object
                         const createdAtDate = new Date(post.createdAt);
                         const formattedDate = createdAtDate.toLocaleDateString(); // You can format this as needed
                         return (
                             <div
                                 key={post?._id}
-                                className="bg-gray-800 rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl hover:scale-105 border border-purple-300"
+                                className="bg-gray-950 rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl hover:scale-105 border border-purple-300"
                                 onClick={() => router.push(`/blogs/${post._id}`)}
                             >
                                 <img
