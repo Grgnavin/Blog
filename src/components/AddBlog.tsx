@@ -9,7 +9,7 @@ import { Loader2 } from 'lucide-react';
 import { BlogFormSchema } from './BlogPage';
 import { createBlog } from '@/app/actions/createBlog';
 
-const AddBlog = ({loading, error}: {loading: boolean, error: Partial<BlogFormSchema>}) => {
+const AddBlog = ({loading, error}: {loading: boolean, error: Partial<BlogFormSchema> | undefined}) => {
     const[state, action, isLoading] = useActionState(createBlog, null);
     return (
         <div>

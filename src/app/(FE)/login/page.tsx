@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react'
+import React, { useActionState, useState } from 'react'
 import { Loader2, LockKeyhole, Mail, User } from "lucide-react";
 import { Separator } from '@/components/ui/separator';
 import { SignupInput, userSignupSchema } from '@/app/schema/userSchema';
@@ -8,44 +8,18 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useUserStore } from '@/app/store/userStore';
 import { useRouter } from 'next/navigation';
+import { userSignin } from '@/app/actions/userSignin';
 
 
 const Login: React.FC = () => {
-    const[input, setInput] = useState<SignupInput>({
-        email: "",
-        password: "",
-        fullname: "",
-    });
     const[errors, setErrors] = useState<Partial<SignupInput>>({});
     const { loading, login } = useUserStore();
     const route = useRouter();
-    const changeEventHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setInput({...input, [name]: value});
-    };
-    const loginSubmitHandler = async(e: React.FormEvent) => {
-        e.preventDefault();
-        const res = userSignupSchema.safeParse(input);
-        if (!res.success) {
-            const fieldError = res.error.formErrors.fieldErrors;
-            setErrors(fieldError as Partial<SignupInput>);
-            return;
-        }
-        //api implement
-        await login(input);
-        route.push('/blogs');
-        
-        setInput({
-            email: "",
-            fullname: "",
-            password: ""
-        })
-    }
 
-
+    const[state, action, isLoading] = useActionState(userSignin, null); 
     return (
         <div className='flex items-center justify-center min-h-screen'>
-            <form onSubmit={loginSubmitHandler} className='p-8 w-full max-w-md border mx-4 border-gray rounded-lg'>
+            <form action={action} className='p-8 w-full max-w-md border mx-4 border-gray rounded-lg'>
                 <div className='mb-4'>
                     <h1 className='font-bold text-2xl text-center text-white'>Builders Academy</h1>
                 </div>
@@ -56,12 +30,10 @@ const Login: React.FC = () => {
                     name='fullname'
                     placeholder='Full Name'
                     className='pl-10 text-gray-200'
-                    value={input.fullname}
-                    onChange={changeEventHandler}
                 />
                 <User className='absolute inset-y-2 left-2 text-gray-500 pointer-events-none'/>
                 {
-                    errors && <span className='text-sm text-red-500'>{errors.fullname}</span>
+                    state?.error && <span className='text-sm text-red-500'>{state.error}</span>
                 }
                 </div>
                 </div>
@@ -72,12 +44,10 @@ const Login: React.FC = () => {
                         name='email'
                         placeholder='Email'
                         className='pl-10 focus-visible:ring-1 text-gray-200'
-                        value={input.email}
-                        onChange={changeEventHandler}
                     />
                     <Mail className='absolute inset-y-2 left-2 text-gray-500 pointer-events-none'/>
                     {
-                        errors && <span className='text-sm text-red-500'>{errors.email}</span>
+                        state?.error && <span className='text-sm text-red-500'>{state.error}</span>
                     }
                 </div>
                 </div>
@@ -88,18 +58,16 @@ const Login: React.FC = () => {
                         name='password'
                         placeholder=' Password'
                         className='pl-10 focus-visible:ring-1 text-gray-200'
-                        value={input.password}
-                        onChange={changeEventHandler}
                     />
                     <LockKeyhole className='absolute inset-y-2 left-2 text-gray-500 pointer-events-none'/>
                     {
-                        errors && <span className='text-sm text-red-500'>{errors.password}</span>
+                        state?.error && <span className='text-sm text-red-500'>{state.error}</span>
                     }
                 </div>
                 </div>
                 <div className='mb-10'>
                     {
-                        loading ? 
+                        isLoading ? 
                             <Button disabled className='w-full'><Loader2 className='mr-2 h-4 w-4 animate-spin'/> Please wait</Button> 
                             : <Button type='submit' className='w-full border border-gray-200'>Login</Button>
                     }

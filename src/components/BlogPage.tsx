@@ -24,29 +24,6 @@ const BlogPage: React.FC = () => {
     const router = useRouter();
     const { loading ,createBlog } = useBlogStore();
     const { allBlogs ,getAllBlogs } = useBlogStore();
-    const SubmitHandler = async(e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        // Handle the update logic here (e.g., API call
-        try {
-            const formdata = new FormData();
-            formdata.append("title", updateData.title);
-            formdata.append("description", updateData.description);
-            formdata.append("author", updateData.author);
-            if (file) {
-                formdata.append("image", file);
-            }
-            await createBlog(formdata);
-            router.push('/blogs');
-        } catch (error) {
-            console.log(error);
-        }
-        setUpdateData({
-            title: "",
-            author: "",
-            description: "",
-            image: undefined,
-        });
-    };
 
     useEffect(() => {
         getAllBlogs();
@@ -67,9 +44,10 @@ const BlogPage: React.FC = () => {
                                 onClick={() => router.push(`/blogs/${post._id}`)}
                             >
                                 <img
-                                    loading="lazy"
                                     src={post.file}
                                     alt={post.title}
+                                    width={24}
+                                    height={24}
                                     className="w-full h-40 object-cover border border-gray-300"
                                 />
                                 <div className="p-6">
