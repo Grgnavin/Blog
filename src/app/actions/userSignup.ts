@@ -18,8 +18,9 @@ export async function userSignup(formData: FormData): Promise<SignupReturnType> 
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
         const username = formData.get("username") as string;
-
-        if (!username.trim() || !email || !password) {
+        console.log(email, password, username);
+        
+        if (!username || !email || !password) {
             return {
                 success: false,
                 error: "Credentials are required"
@@ -44,7 +45,7 @@ export async function userSignup(formData: FormData): Promise<SignupReturnType> 
         })
 
         const token = await generateToken(user);
-        const userWithoutPass = await UserModel.findById( user._id ).select("-password");
+        const userWithoutPass = await UserModel.findById( user._id ).select("-password").lean();
 
         //set cookie
         (await cookies()).set("token", token, {
@@ -63,7 +64,7 @@ export async function userSignup(formData: FormData): Promise<SignupReturnType> 
         console.error("Error during sign-in:", error);
     return {
         success: false,
-        error: "Something went wrong",
+        message: "Something went wrong",
     };
 }
 }

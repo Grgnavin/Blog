@@ -3,19 +3,20 @@ import { create } from "zustand";
 import { LoginInput, SignupInput } from "../schema/userSchema";
 import { persist } from "zustand/middleware";
 import { toast } from "@/hooks/use-toast";
-
+import { userLogout } from "../actions/userLogout";
+import { userSignup } from "../actions/userSignup";
 
 axios.defaults.withCredentials = true;
 
-interface User {
+type User = {
     username: string;
     email: string;
-}
+} | null | unknown;
 
 interface UserStore {
     user: User | null;
     loading: boolean;
-    signup: (input: SignupInput) => Promise<void>;
+    signup: (formData: FormData) => Promise<void>;
     login: (input: LoginInput) => Promise<void>;
     logout: () => Promise<void>;
 }
@@ -24,21 +25,27 @@ export const useUserStore = create<UserStore>()(
     persist((set) => ({
         user: null,
         loading: false,
-        signup: async(input: SignupInput) => {
+        signup: async(formData: FormData) => {
             try {
                 set({ loading: true });
-                const res = await axios.post('/api/auth/signup', input);
-                if (res.data.success) {
-                    set({ loading: false, user: res.data.user });
+                const res = await userSignup(formData);
+                if (res?.success) {
+                    set({ loading: false, user: res?.data });
                     toast({
-                        description: res.data.message
+                        description: res?.message
                     })
                 }else{
                     set({ loading: false });
+                    toast({
+                        description: res?.message || "Signup failed for some reason",
+                    });
                 }
             } catch (error: any) {
                 console.log(error);
                 set({ loading: false });
+                toast({
+                    description: "Something went wrong during signup",
+                });
             }
         },
         login: async(input: LoginInput) => {
@@ -61,11 +68,11 @@ export const useUserStore = create<UserStore>()(
         logout: async() => {
             try {
                 set({ loading: true });
-                const res = await axios.post('/api/auth/user/logout');
-                if (res.data.success) {
-                    set({ loading: false, user: res.data.user });
+                const res = await userLogout();
+                if (res.success) {
+                    set({ user: undefined});
                     toast({
-                        description: res.data.message
+                        description: res.message
                     })
                 }else{
                     set({ loading: false });

@@ -6,37 +6,31 @@ import { SignupInput, userSignupSchema } from '@/app/schema/userSchema';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useUserStore } from '@/app/store/userStore';
+import { useRouter } from 'next/navigation';
 
 const Signup: React.FC = () => {
-    const[input, setInput] = useState<SignupInput>({
-        email: "",
-        password: "",
-        fullname: "",
-    });
     const[errors, setErrors] = useState<Partial<SignupInput>>({});
-    const changeEventHandler = (e:React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setInput({...input, [name]: value});
-    };
-    const loginSubmitHandler = async(e: React.FormEvent) => {
+    const[loading, setLoading] = useState<boolean>(false);
+    const { signup } = useUserStore();
+    const router = useRouter();
+    const handleSubmit =async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const res = userSignupSchema.safeParse(input);
-        if (!res.success) {
-            const fieldError = res.error.formErrors.fieldErrors;
-            setErrors(fieldError as Partial<SignupInput>);
-            return;
+        const formdata = new FormData(e.currentTarget);
+        setLoading(true);
+        try {
+            const res = await signup(formdata);
+            router.push("/blogs");
+        } catch (error) {
+            console.error(error);
+        }finally{
+            setLoading(false)
         }
-        //api implement
-        setInput({
-            email: "",
-            fullname: "",
-            password: ""
-        })
     }
-    const loading = false;
+
     return (
         <div className='flex items-center justify-center min-h-screen'>
-            <form onSubmit={loginSubmitHandler} className='p-8 w-full max-w-md border mx-4 border-gray rounded-lg'>
+            <form onSubmit={handleSubmit} className='p-8 w-full max-w-md border mx-4 border-gray rounded-lg'>
                 <div className='mb-4'>
                     <h1 className='font-bold text-2xl text-center text-white'>Builders Academy</h1>
                 </div>
@@ -44,11 +38,9 @@ const Signup: React.FC = () => {
                 <div className='relative'>
                 <Input
                     type='text'
-                    name='fullname'
+                    name='username'
                     placeholder='Full Name'
-                    className='pl-10 focus-visible:ring-1'
-                    value={input.fullname}
-                    onChange={changeEventHandler}
+                    className='pl-10 focus-visible:ring-1 text-white'
                 />
                 <User className='absolute inset-y-2 left-2 text-gray-500 pointer-events-none'/>
                 {
@@ -64,8 +56,6 @@ const Signup: React.FC = () => {
                         name='email'
                         placeholder='Email'
                         className='pl-10 focus-visible:ring-1 text-gray-200'
-                        value={input.email}
-                        onChange={changeEventHandler}
                     />
                     <Mail className='absolute inset-y-2 left-2 text-gray-500 pointer-events-none'/>
                     {
@@ -80,8 +70,6 @@ const Signup: React.FC = () => {
                         name='password'
                         placeholder=' Password'
                         className='pl-10 focus-visible:ring-1 text-gray-200'
-                        value={input.password}
-                        onChange={changeEventHandler}
                     />
                     <LockKeyhole className='absolute inset-y-2 left-2 text-gray-500 pointer-events-none'/>
                     {
@@ -95,6 +83,7 @@ const Signup: React.FC = () => {
                             <Button disabled className='w-full bg-orange hover:bg-hoverOrange'><Loader2 className='mr-2 h-4 w-4 animate-spin'/> Please wait</Button> 
                             : <Button type='submit' className='w-full border border-gray-200'>Signup</Button>
                     }
+                            {/* : <Button type='submit' className='w-full border border-gray-200'>Signup</Button> */}
                 </div>
                 <Separator />
                 <p className='mt-2 text-center text-gray-300'>
